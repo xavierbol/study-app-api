@@ -26,4 +26,5 @@ Route.get('/', async () => {
 
 Route.group(() => {
   Route.resource('irregular_verbs', 'IrregularVerbsController').apiOnly();
+  Route.resource('vocabularies', 'VocabulariesController').apiOnly();
 }).prefix('/api');
