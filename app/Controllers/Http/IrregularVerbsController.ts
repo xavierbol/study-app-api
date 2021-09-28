@@ -1,12 +1,14 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import IrregularVerb from 'App/Models/IrregularVerb'
+import Language from 'App/Models/Language';
 import IrregularVerbValidator from 'App/Validators/IrregularVerbValidator';
 
 export default class IrregularVerbsController {
-  public async index({ response }: HttpContextContract) {
+  public async index({ response, params }: HttpContextContract) {
     try {
-      // const verbs = await IrregularVerb.all();
-      const verbs = await IrregularVerb.query().limit(3);
+      const verbs = await IrregularVerb.query().whereHas('language', (query) => {
+        query.where('slug', '=', params.lang)
+      });
       return response.ok(
         // shuffle the list, source: https://flaviocopes.com/how-to-shuffle-array-javascript/
         verbs.sort(() => Math.random() - 0.5)
@@ -16,7 +18,7 @@ export default class IrregularVerbsController {
     }
   }
 
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request, response, params }: HttpContextContract) {
     try {
       const verbData = await request.validate(IrregularVerbValidator);
       const verb = await IrregularVerb.findBy('infinitive', verbData.infinitive);
@@ -25,7 +27,8 @@ export default class IrregularVerbsController {
         return response.badRequest('Ce verbe a déjà été ajouté');
       }
 
-      const newVerb = await IrregularVerb.create(verbData);
+      const language = await Language.findByOrFail('slug', params.lang);
+      const newVerb = await IrregularVerb.create({...verbData, languageId: language.id});
       return response.created(newVerb);
     } catch (err) {
       console.error(err);
