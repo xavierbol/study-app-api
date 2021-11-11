@@ -28,5 +28,7 @@ Route.group(() => {
   Route.group(() => {
     Route.resource('irregular_verbs', 'IrregularVerbsController').apiOnly();
     Route.resource('vocabularies', 'VocabulariesController').apiOnly();
+    Route.resource('categories', 'CategoriesController').apiOnly();
+    Route.get('/categories/:category_id/vocabularies', 'CategoriesController.getVocabularies');
   }).prefix('/:lang').where('lang', /^(nl|en)$/)
 }).prefix('/api');

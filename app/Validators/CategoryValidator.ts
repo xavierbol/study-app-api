@@ -1,8 +1,9 @@
-import { schema, rules } from '@ioc:Adonis/Core/Validator'
+import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class VocabularyValidator {
-  constructor(protected ctx: HttpContextContract) { }
+export default class CategoryValidator {
+  constructor(protected ctx: HttpContextContract) {
+  }
 
   /*
    * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
@@ -24,11 +25,8 @@ export default class VocabularyValidator {
    *    ```
    */
   public schema = schema.create({
-    word: schema.string({ trim: true }),
-    translation: schema.string({ trim: true }),
-    category_id: schema.number([
-      rules.exists({ table: 'categories', column: 'id' })
-    ]),
+    name: schema.string({ trim: true }),
+    description: schema.string.optional({ trim: true }),
   })
 
   /**
@@ -43,8 +41,6 @@ export default class VocabularyValidator {
    *
    */
   public messages = {
-    'word.required': 'Le mot de vocabulaire est requis.',
-    'translation.required': 'La traduction du mot de vocabulaire est requis.',
-    'category_id.required': 'La catégorie est requise pour classer correctement le mot de vocabulaire.',
+    'name.required': 'Le nom de la catégorie est requis.',
   }
 }

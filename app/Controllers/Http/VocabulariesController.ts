@@ -1,11 +1,14 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Category from 'App/Models/Category';
 import Vocabulary from 'App/Models/Vocabulary'
 import VocabularyValidator from 'App/Validators/VocabularyValidator';
 
 export default class VocabulariesController {
-  public async index({ response }: HttpContextContract) {
+  public async index({ response, params }: HttpContextContract) {
     try {
-      const words = await Vocabulary.all();
+      const words = await Vocabulary
+        .query()
+        .withScopes((scopes) => scopes.language(params.lang))
       return response.ok(
         words.sort(() => Math.random() - 0.5)
       )
@@ -15,17 +18,27 @@ export default class VocabulariesController {
     }
   }
 
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request, response, params }: HttpContextContract) {
     try {
       const vocabularyData = await request.validate(VocabularyValidator);
-      const vocabulary = await Vocabulary.query().where('word', '=', vocabularyData.word).andWhere('translation', '=', vocabularyData.translation).first();
+      const category = await Category
+        .query()
+        .where('id', '=', vocabularyData.category_id)
+        .withScopes(scope => scope.language(params.lang))
+        .firstOrFail()
+      const vocabulary = await Vocabulary
+        .query()
+        .where('word', '=', vocabularyData.word)
+        .andWhere('translation', '=', vocabularyData.translation)
+        .andWhere('categoryId', '=', category.id)
+        .first();
 
       if (vocabulary != null) {
         response.badRequest('Ce mot de vocabulaire et sa traduction existe déjà.');
       }
       const newVocabulary = await Vocabulary.create(vocabularyData);
       return response.created(newVocabulary);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
       return response.badRequest(err);
     }
@@ -38,6 +51,7 @@ export default class VocabulariesController {
 
       vocabulary.word = vocabularyData.word || vocabulary.word;
       vocabulary.translation = vocabularyData.translation || vocabulary.translation;
+
       await vocabulary.save();
     } catch (err) {
       console.error(err);
