@@ -1,7 +1,8 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import IrregularVerb from 'App/Models/IrregularVerb'
 import Language from 'App/Models/Language';
-import IrregularVerbValidator from 'App/Validators/IrregularVerbValidator';
+import CreateIrregularVerbValidator from 'App/Validators/CreateIrregularVerbValidator';
+import UpdateIrregularVerbValidator from 'App/Validators/UpdateIrregularVerbValidator';
 
 export default class IrregularVerbsController {
   public async index({ response, params }: HttpContextContract) {
@@ -20,7 +21,7 @@ export default class IrregularVerbsController {
 
   public async store({ request, response, params }: HttpContextContract) {
     try {
-      const verbData = await request.validate(IrregularVerbValidator);
+      const verbData = await request.validate(CreateIrregularVerbValidator);
       const verb = await IrregularVerb.findBy('infinitive', verbData.infinitive);
 
       if (verb != null) {
@@ -38,7 +39,7 @@ export default class IrregularVerbsController {
 
   public async update({ request, response, params }: HttpContextContract) {
     try {
-      const verbData = await request.validate(IrregularVerbValidator);
+      const verbData = await request.validate(UpdateIrregularVerbValidator);
       const verb = await IrregularVerb.findOrFail(params.id);
 
       verb.infinitive = verbData.infinitive || verb.infinitive;

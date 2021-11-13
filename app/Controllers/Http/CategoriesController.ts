@@ -3,7 +3,8 @@ import { scope } from '@ioc:Adonis/Lucid/Orm';
 import Category from 'App/Models/Category'
 import Language from 'App/Models/Language';
 import Vocabulary from 'App/Models/Vocabulary';
-import CategoryValidator from 'App/Validators/CategoryValidator';
+import CreateCategoryValidator from 'App/Validators/CreateCategoryValidator';
+import UpdateCategoryValidator from 'App/Validators/UpdateCategoryValidator';
 
 export default class CategoriesController {
   public async index({ response, params }: HttpContextContract) {
@@ -28,7 +29,7 @@ export default class CategoriesController {
 
   public async store({ request, response, params }: HttpContextContract) {
     try {
-      const categoryData = await request.validate(CategoryValidator);
+      const categoryData = await request.validate(CreateCategoryValidator);
       const category = await Category
         .query()
         .where('name', '=', categoryData.name)
@@ -49,7 +50,7 @@ export default class CategoriesController {
 
   public async update({ request, response, params }: HttpContextContract) {
     try {
-      const categoryData = await request.validate(CategoryValidator);
+      const categoryData = await request.validate(UpdateCategoryValidator);
       const category = await Category.findOrFail(params.id);
 
       category.name = categoryData.name || category.name;

@@ -1,7 +1,8 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Category from 'App/Models/Category';
 import Vocabulary from 'App/Models/Vocabulary'
-import VocabularyValidator from 'App/Validators/VocabularyValidator';
+import CreateVocabularyValidator from 'App/Validators/CreateVocabularyValidator';
+import UpdateVocabularyValidator from 'App/Validators/UpdateVocabularyValidator';
 
 export default class VocabulariesController {
   public async index({ response, params }: HttpContextContract) {
@@ -20,7 +21,7 @@ export default class VocabulariesController {
 
   public async store({ request, response, params }: HttpContextContract) {
     try {
-      const vocabularyData = await request.validate(VocabularyValidator);
+      const vocabularyData = await request.validate(CreateVocabularyValidator);
       const category = await Category
         .query()
         .where('id', '=', vocabularyData.category_id)
@@ -46,7 +47,7 @@ export default class VocabulariesController {
 
   public async update({ request, response, params }: HttpContextContract) {
     try {
-      const vocabularyData = await request.validate(VocabularyValidator);
+      const vocabularyData = await request.validate(UpdateVocabularyValidator);
       const vocabulary = await Vocabulary.findOrFail(params.id);
 
       vocabulary.word = vocabularyData.word || vocabulary.word;
