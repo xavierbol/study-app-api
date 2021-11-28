@@ -10,12 +10,21 @@ export default class VocabulariesController {
       const words = await Vocabulary
         .query()
         .withScopes((scopes) => scopes.language(params.lang))
-      return response.ok(
-        words.sort(() => Math.random() - 0.5)
-      )
+        .orderBy('word')
+      return response.ok(words)
     } catch (err) {
       console.error(err);
       return response.internalServerError(err);
+    }
+  }
+
+  public async show({ response, params }: HttpContextContract) {
+    try {
+      const vocabulary = await Vocabulary.findOrFail(params.id);
+      return response.ok(vocabulary);
+    } catch (err) {
+      console.error(err);
+      return response.badRequest(err);
     }
   }
 

@@ -1,5 +1,4 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { scope } from '@ioc:Adonis/Lucid/Orm';
 import Category from 'App/Models/Category'
 import Language from 'App/Models/Language';
 import Vocabulary from 'App/Models/Vocabulary';
@@ -14,6 +13,16 @@ export default class CategoriesController {
     } catch (err) {
       console.error(err);
       return response.internalServerError(err);
+    }
+  }
+
+  public async show({ response, params }: HttpContextContract) {
+    try {
+      const category = await Category.findOrFail(params.id);
+      return response.ok(category);
+    } catch (err) {
+      console.error(err);
+      return response.badRequest(err);
     }
   }
 

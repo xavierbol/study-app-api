@@ -9,13 +9,19 @@ export default class IrregularVerbsController {
     try {
       const verbs = await IrregularVerb.query().whereHas('language', (query) => {
         query.where('slug', '=', params.lang)
-      });
-      return response.ok(
-        // shuffle the list, source: https://flaviocopes.com/how-to-shuffle-array-javascript/
-        verbs.sort(() => Math.random() - 0.5)
-      );
+      }).orderBy('infinitive');
+      return response.ok(verbs);
     } catch (err) {
       return response.internalServerError(err);
+    }
+  }
+
+  public async show({ response, params }: HttpContextContract) {
+    try {
+      const verb = await IrregularVerb.findOrFail(params.id);
+      return response.ok(verb);
+    } catch (err) {
+      return response.badRequest(err);
     }
   }
 
@@ -29,7 +35,7 @@ export default class IrregularVerbsController {
       }
 
       const language = await Language.findByOrFail('slug', params.lang);
-      const newVerb = await IrregularVerb.create({...verbData, languageId: language.id});
+      const newVerb = await IrregularVerb.create({ ...verbData, languageId: language.id });
       return response.created(newVerb);
     } catch (err) {
       console.error(err);
