@@ -6,9 +6,9 @@ export default class UpdateIrregularVerbValidator {
 
   public schema = schema.create({
     infinitive: schema.string.optional({trim: true}),
-    pastSimple: schema.string.optional({trim: true}),
-    pastSimple2: schema.string.optional({trim: true}),
-    pastParticiple: schema.string.optional({trim: true}),
+    past_simple: schema.string.optional({trim: true}),
+    past_simple2: schema.string.optional({trim: true}),
+    past_participle: schema.string.optional({trim: true}),
     translation: schema.string.optional({trim: true}),
   })
 

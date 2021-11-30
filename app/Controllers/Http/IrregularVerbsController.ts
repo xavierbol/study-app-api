@@ -49,9 +49,9 @@ export default class IrregularVerbsController {
       const verb = await IrregularVerb.findOrFail(params.id);
 
       verb.infinitive = verbData.infinitive || verb.infinitive;
-      verb.pastSimple = verbData.pastSimple || verb.pastSimple;
-      verb.pastSimple2 = verbData.pastSimple2 || verb.pastSimple2;
-      verb.pastParticiple = verbData.pastParticiple || verb.pastParticiple;
+      verb.pastSimple = verbData.past_simple || verb.pastSimple;
+      verb.pastSimple2 = verbData.past_simple2 || verb.pastSimple2;
+      verb.pastParticiple = verbData.past_participle || verb.pastParticiple;
       verb.translation = verbData.translation || verb.translation;
       await verb.save();
 
