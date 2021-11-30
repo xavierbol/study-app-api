@@ -34,8 +34,9 @@ export default class IrregularVerbsController {
         return response.badRequest('Ce verbe a déjà été ajouté');
       }
 
+      const convertVerb = ({past_simple2: past_simple_2, ...rest}) => ({past_simple_2, ...rest})
       const language = await Language.findByOrFail('slug', params.lang);
-      const newVerb = await IrregularVerb.create({ ...verbData, languageId: language.id });
+      const newVerb = await IrregularVerb.create({ ...convertVerb(verbData), languageId: language.id });
       return response.created(newVerb);
     } catch (err) {
       console.error(err);
