@@ -63,6 +63,7 @@ export default class VocabulariesController {
       vocabulary.translation = vocabularyData.translation || vocabulary.translation;
 
       await vocabulary.save();
+      return response.noContent();
     } catch (err) {
       console.error(err);
       return response.badRequest(err);
