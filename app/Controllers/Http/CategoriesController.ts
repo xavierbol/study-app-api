@@ -28,7 +28,10 @@ export default class CategoriesController {
 
   public async getVocabularies({ response, params }: HttpContextContract) {
     try {
-      const vocabularies = await Vocabulary.query().where('category_id', '=', params.category_id);
+      const vocabularies = await Vocabulary
+        .query()
+        .where('category_id', '=', params.category_id)
+        .orderBy('word');
       return response.ok(vocabularies);
     } catch (err) {
       console.error(err);
