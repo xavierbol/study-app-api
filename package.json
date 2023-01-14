@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@adonisjs/core": "^5.1.6",
-    "@adonisjs/lucid": "^16.0.2",
+    "@adonisjs/lucid": "^18.3.0",
     "@adonisjs/repl": "^3.1.2",
     "csvtojson": "^2.0.10",
     "luxon": "^1.27.0",
